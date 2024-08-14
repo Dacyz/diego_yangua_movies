@@ -16,6 +16,8 @@ dependencies:
   bloc: ^8.1.4
   flutter_bloc: ^8.1.6
   equatable: ^2.0.5
+  # Declarative routing
+  go_router: ^14.2.3
 
 dev_dependencies:
   flutter_test:
