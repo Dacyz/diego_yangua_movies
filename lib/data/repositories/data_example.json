@@ -1,0 +1,44 @@
+[
+  {
+    "title": "The Shawshank Redemption",
+    "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+    "rating": 9.3,
+    "genre": "Drama",
+    "id": "1"
+  },
+  {
+    "title": "Inception",
+    "description": "A thief who steals corporate secrets through use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+    "rating": 9.2,
+    "genre": "Action",
+    "id": "2"
+  },
+  {
+    "title": "The Dark Knight",
+    "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological tests of his ability to fight injustice.",
+    "rating": 9.1,
+    "genre": "Action",
+    "id": "3"
+  },
+  {
+    "title": "Pulp Fiction",
+    "description": "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+    "rating": 9.2,
+    "genre": "Crime",
+    "id": "4"
+  },
+  {
+    "title": "The Godfather",
+    "description": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
+    "rating": 7.8,
+    "genre": "Drama",
+    "id": "5"
+  },
+  {
+    "title": "Fight Club",
+    "description": "An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more...",
+    "rating": 8.8,
+    "genre": "Drama",
+    "id": "6"
+  }
+]
