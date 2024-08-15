@@ -13,6 +13,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     on<GetMovies>(_onStarted);
     on<SearchMovie>(_onSearchMovie);
     on<UpdateMovies>(_onCreateOrUpdateMovie);
+    on<RemoveMovies>(_onRemoveMovie);
     on<RateMovie>(_onRateMovie);
   }
 
@@ -48,7 +49,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         late Movie movie;
         if (event.movie.id == null || event.movie.id!.isEmpty) {
           movie = await provider.createMovie(event.movie);
-          emit(MoviesLoaded(movies: [movie, ...state.movies]));
+          emit(MoviesLoaded(movies: [...state.movies, movie]));
         } else {
           final result = await provider.updateMovie(event.movie);
           if (!result) {
@@ -56,9 +57,29 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
             return;
           }
           final movieIndex = state.movies.indexWhere((m) => m.id == event.movie.id);
+          state.movies.removeAt(movieIndex);
           state.movies.insert(movieIndex, event.movie);
           emit(MoviesLoaded(movies: state.movies));
         }
+      }
+    } catch (e) {
+      emit(MoviesError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onRemoveMovie(RemoveMovies event, Emitter<MoviesState> emit) async {
+    try {
+      final state = this.state;
+      if (state is MoviesLoaded) {
+        emit(MoviesLoading());
+        final result = await provider.deleteMovie(event.movie);
+        if (!result) {
+          emit(const MoviesError(message: 'Failed to update movie'));
+          return;
+        }
+        final movieIndex = state.movies.indexWhere((m) => m.id == event.movie.id);
+        state.movies.removeAt(movieIndex);
+        emit(MoviesLoaded(movies: state.movies));
       }
     } catch (e) {
       emit(MoviesError(message: e.toString()));

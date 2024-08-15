@@ -37,3 +37,12 @@ class UpdateMovies extends MoviesEvent {
   @override
   List<Object> get props => [movie];
 }
+
+class RemoveMovies extends MoviesEvent {
+  final Movie movie;
+
+  const RemoveMovies(this.movie);
+
+  @override
+  List<Object> get props => [movie];
+}
