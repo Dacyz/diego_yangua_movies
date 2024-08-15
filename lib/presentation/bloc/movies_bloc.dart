@@ -32,8 +32,10 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
       emit(MoviesLoading());
       final movies = await provider.getMovies();
       final test = event.genre == Genre.notFound
-          ? (Movie movie) => movie.title.contains(event.movie)
-          : (Movie movie) => movie.title.contains(event.movie) && movie.genre == event.genre;
+          ? (Movie movie) => movie.title.contains(event.movie) || movie.description.contains(event.movie)
+          : (Movie movie) =>
+              (movie.title.contains(event.movie) || movie.description.contains(event.movie)) &&
+              movie.genre == event.genre;
       final filteredMovies = movies.where(test).toList();
       emit(MoviesLoaded(movies: filteredMovies));
     } catch (e) {
