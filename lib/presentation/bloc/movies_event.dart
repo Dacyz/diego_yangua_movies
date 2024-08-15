@@ -9,22 +9,14 @@ sealed class MoviesEvent extends Equatable {
 
 class GetMovies extends MoviesEvent {}
 
-class ToggleGenre extends MoviesEvent {
-  final Genre genre;
-
-  const ToggleGenre(this.genre);
-
-  @override
-  List<Object> get props => [genre];
-}
-
 class SearchMovie extends MoviesEvent {
   final String movie;
+  final Genre genre;
 
-  const SearchMovie(this.movie);
+  const SearchMovie(this.movie, [this.genre = Genre.notFound]);
 
   @override
-  List<Object> get props => [movie];
+  List<Object> get props => [movie, genre];
 }
 
 class RateMovie extends MoviesEvent {

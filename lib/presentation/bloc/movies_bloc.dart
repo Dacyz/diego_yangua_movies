@@ -11,7 +11,6 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   final provider = MockProvider();
   MoviesBloc() : super(MoviesInitial()) {
     on<GetMovies>(_onStarted);
-    on<ToggleGenre>(_onToggleGenre);
     on<SearchMovie>(_onSearchMovie);
     on<RateMovie>(_onRateMovie);
   }
@@ -26,17 +25,15 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     }
   }
 
-  Future<void> _onToggleGenre(ToggleGenre event, Emitter<MoviesState> emit) async {
-    try {
-      // Add the selected genre to the list of selected genres
-    } catch (e) {
-      emit(MoviesError(message: e.toString()));
-    }
-  }
-
   Future<void> _onSearchMovie(SearchMovie event, Emitter<MoviesState> emit) async {
     try {
-      // Search for movies
+      emit(MoviesLoading());
+      final movies = await provider.getMovies();
+      final test = event.genre == Genre.notFound
+          ? (Movie movie) => movie.title.contains(event.movie)
+          : (Movie movie) => movie.title.contains(event.movie) && movie.genre == event.genre;
+      final filteredMovies = movies.where(test).toList();
+      emit(MoviesLoaded(movies: filteredMovies));
     } catch (e) {
       emit(MoviesError(message: e.toString()));
     }
