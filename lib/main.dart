@@ -1,4 +1,5 @@
 import 'package:diego_yangua_movies/core/utils/routes.dart';
+import 'package:diego_yangua_movies/core/theme/theme.dart';
 import 'package:diego_yangua_movies/presentation/bloc/movies_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => MoviesBloc()..add(GetMovies()),
-      child: MaterialApp.router(routerConfig: MovieRouter.router),
+      child: MaterialApp.router(
+        routerConfig: MovieRouter.router,
+        debugShowCheckedModeBanner: false,
+        theme: CustomTheme.theme,
+      ),
     );
   }
 }
