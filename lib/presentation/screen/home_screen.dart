@@ -129,12 +129,13 @@ class _HomeScreenState extends State<HomeScreen> {
       autoPlayInterval: const Duration(seconds: 3),
       autoPlayAnimationDuration: const Duration(milliseconds: 800),
       autoPlayCurve: Curves.fastOutSlowIn,
+      enableInfiniteScroll: false,
     );
     return BlocBuilder<MoviesBloc, MoviesState>(
       builder: (context, state) {
         if (state is MoviesLoading) {
           return CarouselSlider.builder(
-            options: options,
+            options: options.copyWith(autoPlay: false),
             itemCount: 6,
             itemBuilder: (_, index, __) => MovieCardSkeleton.carousel(),
           );

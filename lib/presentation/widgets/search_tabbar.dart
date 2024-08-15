@@ -64,12 +64,14 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(color: Colors.white);
+    final size = MediaQuery.sizeOf(context);
+    final showFullView = size.width >= 800;
     var textFieldSize = MediaQuery.sizeOf(context).width / 2;
     textFieldSize = _selectedIndex != 0 ? textFieldSize : (textFieldSize + 80);
     return Container(
       padding: const EdgeInsets.all(8.0),
       margin: const EdgeInsets.all(8.0),
-      constraints: const BoxConstraints(maxWidth: 342),
+      constraints: BoxConstraints(maxWidth: showFullView ? 800 : 342),
       decoration: BoxDecoration(
         color: Decorations.kSecondaryColor,
         borderRadius: BorderRadius.circular(30),
@@ -78,7 +80,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
         mainAxisSize: MainAxisSize.min,
         children: [
           GestureDetector(
-            onTap: _switchSearch,
+            onTap: showFullView ? () => setState(() => searchVisible = false) : _switchSearch,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -89,7 +91,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
               child: const Icon(Icons.search, color: Colors.white),
             ),
           ),
-          if (searchVisible) ...[
+          if (searchVisible || showFullView) ...[
             const SizedBox(width: 8.0),
             Flexible(
               child: TextFormField(
@@ -103,7 +105,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
               ),
             ),
             const SizedBox(width: 8.0),
-            if (_selectedIndex != 0)
+            if (_selectedIndex != 0 && !showFullView)
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -120,6 +122,17 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
                 ),
               ),
             const SizedBox(width: 4),
+          ],
+          if (!searchVisible) ...[
+            Flexible(
+              child: _CustomTabBar(
+                values: _tabs,
+                selectedIndex: _selectedIndex,
+                onChange: _selectGenre,
+              ),
+            )
+          ],
+          if (searchVisible || showFullView) ...[
             BlocBuilder<MoviesBloc, MoviesState>(
               builder: (context, state) {
                 if (state is MoviesLoaded) {
@@ -147,14 +160,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
               },
             ),
             const SizedBox(width: 4),
-          ] else
-            Flexible(
-              child: _CustomTabBar(
-                values: _tabs,
-                selectedIndex: _selectedIndex,
-                onChange: _selectGenre,
-              ),
-            )
+          ]
         ],
       ),
     );

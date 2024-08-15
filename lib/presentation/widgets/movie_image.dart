@@ -19,7 +19,7 @@ class MovieImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         child: CachedNetworkImage(
           imageUrl: movie.imagePath,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
           errorWidget: (context, error, stackTrace) => const Icon(Icons.error),
           progressIndicatorBuilder: (context, url, downloadProgress) => AspectRatio(
             aspectRatio: 172 / 250,
