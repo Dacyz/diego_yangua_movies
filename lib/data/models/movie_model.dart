@@ -22,6 +22,8 @@ class Movie {
     required this.genre,
   });
 
+  String get imagePath => 'https://via.assets.so/movie.png?id=${id}&q=95&fit=fill';
+
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
 
   Map<String, dynamic> toJson() => _$MovieToJson(this);

@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 /// transparent background. It takes a child widget as input and wraps it in a
 /// decorated box to apply the desired styling and padding.
 class CustomModalSheet<T> extends StatelessWidget {
-  const CustomModalSheet({super.key, required this.child});
+  const CustomModalSheet({super.key, required this.child, this.color = Decorations.kSecondaryColor});
 
   /// The child widget to be displayed inside the modal sheet.
   final Widget child;
+  final Color color;
 
   /// Shows the custom modal sheet with the provided child widget.
   ///
@@ -34,9 +35,9 @@ class CustomModalSheet<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: Decorations.kSecondaryColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Padding(
         padding: EdgeInsets.only(
@@ -45,7 +46,7 @@ class CustomModalSheet<T> extends StatelessWidget {
           right: 16,
           bottom: MediaQuery.of(context).viewInsets.bottom + 16,
         ),
-        child: SafeArea(child: child),
+        child: child,
       ),
     );
   }

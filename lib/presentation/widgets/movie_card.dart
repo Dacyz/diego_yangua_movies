@@ -1,9 +1,11 @@
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diego_yangua_movies/core/utils/colors.dart';
 import 'package:diego_yangua_movies/data/models/movie_model.dart';
+import 'package:diego_yangua_movies/presentation/page/update_movie_page.dart';
+import 'package:diego_yangua_movies/presentation/widgets/movie_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 part 'movie_card_skeleton.dart';
@@ -21,53 +23,49 @@ class MovieCard extends StatelessWidget {
     final titleSmall = theme.bodyMedium?.copyWith(color: Colors.white);
     return Card(
       color: Decorations.kSecondaryColor.withOpacity(.7),
-      child: isCarouselView
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(child: _buildImage()),
-                const SizedBox(height: 8.0),
-                Text(movie.title, textAlign: TextAlign.center, style: titleMedium),
-                const SizedBox(height: 8.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(movie.description, style: titleSmall),
-                ),
-                const SizedBox(height: 8.0),
-              ],
-            )
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
+      child: InkWell(
+        onTap: () => context.go('/detail', extra: movie),
+        onLongPress: () => UpdateMoviePage.showModal(context, movie),
+        borderRadius: BorderRadius.circular(8),
+        child: isCarouselView
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildImage(),
+                  Expanded(child: movie.image),
                   const SizedBox(height: 8.0),
-                  Text(movie.title, textAlign: TextAlign.center, style: titleMedium),
-                  const SizedBox(height: 8.0),
-                  Text(movie.description, style: titleSmall),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(movie.title, textAlign: TextAlign.center, style: titleMedium),
+                        const SizedBox(height: 8.0),
+                        Text(movie.description, style: titleSmall),
+                        Text('Rating: ⭐${movie.rating.toStringAsFixed(1)}',
+                            textAlign: TextAlign.start, style: titleSmall),
+                      ],
+                    ),
+                  ),
                 ],
+              )
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    movie.image,
+                    const SizedBox(height: 8.0),
+                    Text(movie.title, textAlign: TextAlign.center, style: titleMedium),
+                    const SizedBox(height: 8.0),
+                    Text(movie.description, style: titleSmall),
+                    Text('Rating: ⭐${movie.rating.toStringAsFixed(1)}', style: titleSmall),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
-
-  Widget _buildImage() => ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: CachedNetworkImage(
-        imageUrl: 'https://via.assets.so/movie.png?id=${movie.id}&q=95&fit=fill',
-        fit: BoxFit.cover,
-        errorWidget: (context, error, stackTrace) => const Icon(Icons.error),
-        progressIndicatorBuilder: (context, url, downloadProgress) => AspectRatio(
-          aspectRatio: 172 / 250,
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[700]!,
-            highlightColor: Colors.grey[500]!,
-            child: Container(
-              width: double.infinity,
-              color: Colors.grey[700],
-            ),
-          ),
-        ),
-      ));
 }
