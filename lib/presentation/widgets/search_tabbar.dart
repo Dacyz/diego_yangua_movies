@@ -1,5 +1,8 @@
 import 'package:diego_yangua_movies/core/utils/colors.dart';
+import 'package:diego_yangua_movies/data/models/genre_enum.dart';
+import 'package:diego_yangua_movies/presentation/bloc/movies_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomSearchBar extends StatefulWidget {
   const CustomSearchBar({super.key});
@@ -18,12 +21,44 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
     setState(() {
       searchVisible = !searchVisible;
     });
+    // Clear the search query
+    if (!searchVisible) {
+      searchController.clear();
+    }
   }
 
   void _selectGenre(int value) {
     setState(() {
       _selectedIndex = value;
     });
+    // Sort the movies
+    _sortMovies();
+  }
+
+  /// Sorts the movies based on the selected genre and the search query.
+  ///
+  /// If the [MoviesBloc] state is [MoviesLoaded], the function retrieves the
+  /// selected genre and the search query from the state. It then adds a new
+  /// [SearchMovie] event to the [MoviesBloc] with the retrieved values.
+  ///
+  /// If the selected genre is 'All', the function sets the genre to
+  /// [Genre.notFound]. Otherwise, it sets the genre to the corresponding value
+  /// from the [Genre] enum.
+  ///
+  /// Parameters:
+  ///   - [value]: An optional parameter that is not used in the function.
+  void _sortMovies([value]) {
+    // Read the state of the MoviesBloc
+    final bloc = context.read<MoviesBloc>();
+
+    // Check if the state is MoviesLoaded
+    if (bloc.state is MoviesLoaded) {
+      // Determine the selected genre based on the selected index
+      final genre = _selectedIndex == 0 ? Genre.notFound : Genre.values[_selectedIndex - 1];
+
+      // Add a new SearchMovie event to the MoviesBloc with the search query and genre
+      bloc.add(SearchMovie(searchController.text, genre));
+    }
   }
 
   @override
@@ -59,6 +94,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
             Flexible(
               child: TextFormField(
                 controller: searchController,
+                onFieldSubmitted: _sortMovies,
                 decoration: const InputDecoration.collapsed(
                   hintText: 'Search movie...',
                   hintStyle: textStyle,
@@ -83,6 +119,34 @@ class _CustomSearchBarState extends State<CustomSearchBar> with SingleTickerProv
                   ),
                 ),
               ),
+            const SizedBox(width: 4),
+            BlocBuilder<MoviesBloc, MoviesState>(
+              builder: (context, state) {
+                if (state is MoviesLoaded) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: _sortMovies,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent,
+                      child: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey),
+                    ),
+                  );
+                } else if (state is MoviesLoading) {
+                  return const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      strokeCap: StrokeCap.round,
+                      color: Colors.grey,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+            const SizedBox(width: 4),
           ] else
             Flexible(
               child: _CustomTabBar(
