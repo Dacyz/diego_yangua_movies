@@ -58,18 +58,21 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             FloatingActionButton(
+              heroTag: 0,
               onPressed: _showCV,
               mini: true,
               child: const Icon(Icons.info_outline_rounded),
             ),
             const SizedBox(width: 8.0),
             FloatingActionButton(
+              heroTag: 1,
               onPressed: _addMovie,
               shape: const StadiumBorder(),
               child: const Icon(Icons.add),
             ),
             const SizedBox(width: 8.0),
             FloatingActionButton(
+              heroTag: 2,
               onPressed: _changeView,
               mini: true,
               child: _viewType == MoviesViewType.grid ? const Icon(Icons.list_alt) : const Icon(Icons.grid_view),
