@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:diego_yangua_movies/core/utils/colors.dart';
 import 'package:diego_yangua_movies/presentation/bloc/movies_bloc.dart';
+import 'package:diego_yangua_movies/presentation/page/about_page.dart';
 import 'package:diego_yangua_movies/presentation/widgets/movie_card.dart';
 import 'package:diego_yangua_movies/presentation/widgets/search_tabbar.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showCV() {
-    // TODO: Add movie
+    AboutPage.showModal(context);
   }
 
   void _changeView() {
