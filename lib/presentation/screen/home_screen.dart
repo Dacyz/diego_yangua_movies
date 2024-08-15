@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:diego_yangua_movies/core/utils/colors.dart';
 import 'package:diego_yangua_movies/presentation/bloc/movies_bloc.dart';
 import 'package:diego_yangua_movies/presentation/page/about_page.dart';
+import 'package:diego_yangua_movies/presentation/page/create_movie_page.dart';
 import 'package:diego_yangua_movies/presentation/widgets/movie_card.dart';
 import 'package:diego_yangua_movies/presentation/widgets/search_tabbar.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   MoviesViewType _viewType = MoviesViewType.list;
 
-  void _addMovie() {
-    // TODO: Add movie
+  void _addMovie() async {
+    final movie = await CreateMoviePage.showModal(context);
+    if (movie != null) {
+      final bloc = context.read<MoviesBloc>();
+      bloc.add(UpdateMovies(movie));
+    }
   }
 
   void _showCV() {

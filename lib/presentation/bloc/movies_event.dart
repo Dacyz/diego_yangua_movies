@@ -28,3 +28,12 @@ class RateMovie extends MoviesEvent {
   @override
   List<Object> get props => [rate, movie];
 }
+
+class UpdateMovies extends MoviesEvent {
+  final Movie movie;
+
+  const UpdateMovies(this.movie);
+
+  @override
+  List<Object> get props => [movie];
+}

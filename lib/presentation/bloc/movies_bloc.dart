@@ -12,6 +12,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   MoviesBloc() : super(MoviesInitial()) {
     on<GetMovies>(_onStarted);
     on<SearchMovie>(_onSearchMovie);
+    on<UpdateMovies>(_onCreateOrUpdateMovie);
     on<RateMovie>(_onRateMovie);
   }
 
@@ -34,6 +35,31 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
           : (Movie movie) => movie.title.contains(event.movie) && movie.genre == event.genre;
       final filteredMovies = movies.where(test).toList();
       emit(MoviesLoaded(movies: filteredMovies));
+    } catch (e) {
+      emit(MoviesError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onCreateOrUpdateMovie(UpdateMovies event, Emitter<MoviesState> emit) async {
+    try {
+      final state = this.state;
+      if (state is MoviesLoaded) {
+        emit(MoviesLoading());
+        late Movie movie;
+        if (event.movie.id == null || event.movie.id!.isEmpty) {
+          movie = await provider.createMovie(event.movie);
+          emit(MoviesLoaded(movies: [movie, ...state.movies]));
+        } else {
+          final result = await provider.updateMovie(event.movie);
+          if (!result) {
+            emit(const MoviesError(message: 'Failed to update movie'));
+            return;
+          }
+          final movieIndex = state.movies.indexWhere((m) => m.id == event.movie.id);
+          state.movies.insert(movieIndex, event.movie);
+          emit(MoviesLoaded(movies: state.movies));
+        }
+      }
     } catch (e) {
       emit(MoviesError(message: e.toString()));
     }
